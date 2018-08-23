@@ -1,15 +1,25 @@
 {-
 
  This is a file with some ideas, what you can do:
+ 
+ Install agda and emacs.
 
- Installation hints for Mac: installing agda with Homebrew and using it with Aquamacs worked   
+ Installation hints for Mac: 
+  installing agda with Homebrew and using it with Aquamacs worked   
+  if the agda-mode in Aquamacs doesn't work, you can try to remove the compiled mode files
+  you can find the directory containing them with
+  
+  agda-mode locata
+
+  go to the directory and do
+
+  rm *.elc
+
 
  First: You should know a little bit of emacs, if you don't
  make sure emacs is installed on your system, start it and
  do the tutorial (hit CTRL-h CTRL-t to start it or find it in some menu).
 
- Second: Make sure agda is installed on your system and the agda-mode for
- emacs is set up.
 -}
 
 
