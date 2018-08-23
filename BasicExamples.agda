@@ -118,5 +118,22 @@ swap : {A : Set} {B : Set} -> product A B -> product B A
 swap (pair a b) = pair b a
 
 {-
+  Exercises:
   write curry and uncurry functions
+  write a function 'reverse' which reverses a list 
 -}
+
+{-
+  Let's introduce some fancy notation.
+  We can use '_' to tell agda, where the arguments in a definition go.
+  Let's use this to get a nicer syntax for the plus function:
+-}
+
+_+_ : nat -> nat -> nat
+zero    + l = l
+(suc k) + l = suc (k + l)
+
+-- and for products:
+
+data _x_ (A : Set) (B : Set) : Set where
+  _,_ : A -> B -> A x B
