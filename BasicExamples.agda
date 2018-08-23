@@ -16,10 +16,13 @@
   rm *.elc
 
 
- First: You should know a little bit of emacs, if you don't
+ Maybe First: You should know a little bit of emacs, if you don't
  make sure emacs is installed on your system, start it and
  do the tutorial (hit CTRL-h CTRL-t to start it or find it in some menu).
 
+ Make a test.agda file in Aquamacs and write copy paste this file into it
+ and try to 'load' it with CTRL-c CTRL-l.
+ If everything works like it should, the text should become colored.
 -}
 
 
@@ -40,3 +43,10 @@ map-everything-to-zero x = zero
 another-map : nat -> nat
 another-map zero = one
 another-map (suc k) = zero
+
+{-
+  things you could try now:
+  define a function double, which doubles its argument
+  define a function +
+-}
+
