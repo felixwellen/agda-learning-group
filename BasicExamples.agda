@@ -52,5 +52,37 @@ another-map (suc k) = zero
   define a function double, which doubles its argument
   define a function +
 
--}  (<- this ends a comment)
+  You can normalize (evaluate) a term with CTRL-c CTRL-n, to see if
+  double(one)
+  gives the correct
 
+-}  -- ( <- this ends a comment)
+
+{-
+ here is another inductive type
+ which uses a type parameter --
+ the type of lists of terms of type A
+-}
+
+data list (A : Set) : Set where
+     empty : list A
+     cons : A -> list A -> list A
+
+-- here is an example function
+append : list nat -> list nat -> list nat
+append empty l2 = l2
+append (cons x l1) l2 = cons x (append l1 l2)
+
+{-
+  There is a feature of agda called 'hole'.
+  You can make a hole in an incomplete definition, 
+  for example, you could have started to define 'append' by writing:
+
+    append : list nat -> list nat -> list nat
+    append l1 l2 = ?
+
+  If you press CTRL-c CTRL-l now, agda will create a 'hole' where the '?' was.
+  You can now write something into the hole and interact with agda.
+  For example, write 'l1' into the hole and hit CTRL-c CTRL-c
+  to let agda make a case distinction on l1.
+-}
