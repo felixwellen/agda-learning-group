@@ -100,3 +100,23 @@ append (cons x l1) l2 = cons x (append l1 l2)
   define a length function from lists of natural numbers to natural numbers
 -}
 
+{-
+  we will now define products of types 
+-}
+
+data product (A : Set) (B : Set) : Set where
+  pair : A -> B -> product A B
+
+-- using parameters 'A' and 'B' in function definitions works like follows:
+
+swap' : (A : Set) (B : Set) -> product A B -> product B A
+swap' A B (pair a b) = pair b a
+
+-- we can ask agda to figure out 'A' and 'B' on its own wiht curly braces
+
+swap : {A : Set} {B : Set} -> product A B -> product B A
+swap (pair a b) = pair b a
+
+{-
+  write curry and uncurry functions
+-}
