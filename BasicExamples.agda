@@ -25,6 +25,7 @@
  If everything works like it should, the text should become colored.
 -}
 
+-- one line comments start with '--'
 
 -- inductive definition of the natural numbers
 
@@ -33,7 +34,8 @@ data nat : Set where
   suc : nat -> nat
 
 -- some definition
-one = suc zero
+one = suc zero    -- the '=' means something like ':≡' in HoTT
+
 
 -- function definition
 map-everything-to-zero : nat -> nat
@@ -44,9 +46,11 @@ another-map : nat -> nat
 another-map zero = one
 another-map (suc k) = zero
 
-{-
+{-  (<- this starts a comment..)
+
   things you could try now:
   define a function double, which doubles its argument
   define a function +
--}
+
+-}  (<- this ends a comment)
 
