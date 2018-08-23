@@ -137,3 +137,10 @@ zero    + l = l
 
 data _x_ (A : Set) (B : Set) : Set where
   _,_ : A -> B -> A x B
+
+
+{- solutions: -}
+
+curry : {A : Set} {B : Set} {C : Set}
+      -> ((A x B) -> C) -> (A -> B -> C)
+curry f a b = f (a , b)
