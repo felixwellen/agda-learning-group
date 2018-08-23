@@ -16,7 +16,7 @@
   rm *.elc
 
 
- Maybe First: You should know a little bit of emacs, if you don't
+ Maybe First: You should know a little bit of emacs, if you don't,
  make sure emacs is installed on your system, start it and
  do the tutorial (hit CTRL-h CTRL-t to start it or find it in some menu).
 
@@ -84,5 +84,19 @@ append (cons x l1) l2 = cons x (append l1 l2)
   If you press CTRL-c CTRL-l now, agda will create a 'hole' where the '?' was.
   You can now write something into the hole and interact with agda.
   For example, write 'l1' into the hole and hit CTRL-c CTRL-c
-  to let agda make a case distinction on l1.
+  to let agda make a case distinction on l1. Then it should look like this:
+
+    append : list nat -> list nat -> list nat
+    append empty l2 = {!!}
+    append (cons x l1) l2 = {!!}
+
+  You have two holes now! Try to write the correct term into them and ask agda
+  to fill them by hitting CTRL-c CTRL-r.
 -}
+
+{-
+  things you can do now:
+  define a function adding all numbers in a list
+  define a length function from lists of natural numbers to natural numbers
+-}
+
