@@ -39,6 +39,14 @@ record Σ {i j} {A : U i} (P : A → U j) : U (i ⊔ j) where
     a : A
     p : P a
 
+Σπ₁ : ∀ {i} {j} {A : U i} {P : A → U j} 
+  → Σ P → A
+Σπ₁ (a , _) = a
+
+Σπ₂ : ∀ {i} {j} {A : U i} {P : A → U j}
+  → (x : Σ P) → P (Σπ₁ x)
+Σπ₂ (a , p) = p  
+
 _×_ : 
   ∀ {i j} 
   → (A : U i) → (B : U j) → U (i ⊔ j)
@@ -76,7 +84,6 @@ _⇒_ : ∀ {i j} {A : U i} {B : U j} → (f g : A → B) → U (i ⊔ j)
 f ⇒ g = (a : _) → f a ≈ g a
 
 record _is-an-equivalence {i j} {A : U i} {B : U j} (f : A → B) : U (i ⊔ j) where
-  constructor has-left-inverse_by_and-right-inverse_by_
   field
     l : B → A
     l-is-left-inverse : l ∘ f ⇒ id
