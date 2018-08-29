@@ -138,6 +138,73 @@ zero    + l = l
 data _x_ (A : Set) (B : Set) : Set where
   _,_ : A -> B -> A x B
 
+{-
+  write a function 'reverse' which reverses a list.
+-}
+
+{-
+  In the emacs mode for agda, you can also enter some unicode symbols 
+  and use them as identifiers. Here are some examples:
+    type         to get
+    \bN           ℕ
+    \bZ           ℤ
+    \times        ×
+    \Pi           Π
+    \Sigma        Σ
+  To see a full list you can hit ALT-x and enter 'describe-input-method'.
+  In some cases, you end up at a list of symbols from which you can chose 
+  with the arrow keys. Try '\bu' and '\r'.
+
+  So here are the naturals again:
+-}
+
+data ℕ : Set where
+  zero : ℕ
+  suc : ℕ → ℕ
+
+{- 
+  note that we also replaced '->' with '→', where the latter is the first 
+  option of '\r'.
+
+  Let us continue with (preliminary versions of) dependent sums and products.
+  For a dependent type 'P : A → Set', the product is denoted '(x : A) → P x'
+  in agda. We can still introduce a 'Π':
+-}
+
+Π : (A : Set) → (P : A → Set) → Set
+Π A P = (x : A) → P x
+
+{-
+  For 'data'-types with just one constructor, agda has 'record'-types, which
+  have some additional features. We use those for dependent sums:
+-}
+
+record Σ (A : Set) (P : A → Set) : Set where
+  constructor _,_
+  field
+    a : A
+    p : P a
+    
+{-
+  projections, defined by pattern matching:
+-}
+
+p1 : (A : Set) → (P : A → Set) → Σ A P → A
+p1 A P (a , p) = a
+
+{- 
+  We can have agda figure out the first two arguments in most cases:
+  (and use a unicode-name '\pi\_1')
+-}
+
+π₁ : {A : Set} → {P : A → Set} → Σ A P → A
+π₁ (a , p) = a
+
+{-
+  define the second projection!
+  you can also try to write a dependent (un-)curry-function
+-}
+
 
 {- solutions: -}
 
