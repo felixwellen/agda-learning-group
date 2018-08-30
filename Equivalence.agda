@@ -21,8 +21,19 @@ record _≃_  {i j} (A : U i) (B : U j) : U (i ⊔ j) where
     e : A → B
     proof : e is-an-equivalence
 
+
+_≃→ : ∀ {i j} {A : U i} {B : U j} → A ≃ B → (A → B)
+(e is-an-equivalence-because _) ≃→ = e
+
 _⁻¹→ : ∀ {i j} {A : U i} {B : U j} → A ≃ B → (B → A)
 (e is-an-equivalence-because record { inverse = inverse ; η = η ; ε = ε ; half-adjoint = half-adjoint }) ⁻¹→ = inverse
+
+_≃η : ∀ {i j} {A : U i} {B : U j} → (e : A ≃ B) → (e ⁻¹→) ∘ (e ≃→) ⇒ id 
+(_ is-an-equivalence-because record { inverse = _ ; η = η ; ε = _ ; half-adjoint = _ }) ≃η = η
+
+_≃ε : ∀ {i j} {A : U i} {B : U j} → (e : A ≃ B) → (e ≃→) ∘ (e ⁻¹→) ⇒ id 
+(_ is-an-equivalence-because record { inverse = _ ; η = _ ; ε = ε ; half-adjoint = _ }) ≃ε = ε
+
 
 
 postulate

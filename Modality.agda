@@ -33,8 +33,13 @@ postulate
     For all modal dependent types P : ○ A → U-○,
     there is an equivalence:
     _∘η : Π P → Π (P ∘ η)
+    The 'unique-elimination' below has a ' at the end
+    of its name. This indicates, there is another version of 
+    it, which will be the 'real' version.
+    After some preliminary work, we will derive this 'real'
+    version.
   -}
-  unique-elimination :
+  unique-elimination' :
     ∀ {i} {A : U i} (P : ○ A → U i) 
     → (λ (s : (x : ○ A) → ○ (P x)) → (λ (x : A) → s (η x))) is-an-equivalence
 
@@ -42,7 +47,7 @@ postulate
   we will derive a preliminary recursion from that
 -}
 module recursion' {i} {A B : U i} (f : A → ○ B) where 
-  open _is-an-equivalence (unique-elimination (λ (x : ○ A) → B))
+  open _is-an-equivalence (unique-elimination' (λ (x : ○ A) → B))
     renaming (η to left-invertibility; ε to right-invertibility)
   
   ○-recursion : (○ A → ○ B)
@@ -74,6 +79,8 @@ module recursion' {i} {A B : U i} (f : A → ○ B) where
     open recursion' (η ∘ f)
   in ○-recursion
 
+
+
 η-is-natural : ∀ {i} {A B : U i}
   → (f : A → B)
   → ○→ f ∘ η ⇒ η ∘ f
@@ -96,47 +103,49 @@ module recursion' {i} {A B : U i} (f : A → ○ B) where
           (  ○-uniqueness η (η ∘ ○-recursion id) (λ x → ap η (○-compute id x))
           •⇒ ○-uniqueness η id (λ _ → refl) ⁻¹⇒ )
 
-
-
 {-
   Now we repeat the unique-elimination axiom and the 
   recursion in a slightly more general way (i.e. replacing 
   one application of '○' with the condition of being modal):
 -}
-{-
-unique-elimination' :
+
+unique-elimination :
     ∀ {i} {A : U i} (P : ○ A → U i) (P-is-modal : (x : ○ A) → (P x) is-modal)
     → (λ (s : (x : ○ A) → P x) → (λ (x : A) → s (η x))) is-an-equivalence
-unique-elimination' P P-is-modal =
+unique-elimination P P-is-modal =
   let
     φ : Π P ≃ Π (λ x → ○ (P x))
     φ = equivalenct-depedent-types-have-equivalent-Π P (λ z → ○ (P z)) (λ x → η is-an-equivalence-because P-is-modal x)
-    old-unique-elimination : Π (λ x → ○ (P x)) ≃ Π (λ y → ○ (P (η y)))
-    old-unique-elimination  = (λ s x → s (η x)) is-an-equivalence-because unique-elimination P
+    old-elimination : Π (λ x → ○ (P x)) ≃ Π (λ y → ○ (P (η y)))
+    old-elimination  = (λ s x → s (η x)) is-an-equivalence-because unique-elimination' P
     ψ : Π (λ y → (P (η y))) ≃ Π (λ y → ○ (P (η y)))
     ψ = equivalenct-depedent-types-have-equivalent-Π (λ y → P (η y)) (λ x → ○ (P (η x))) (λ x → η is-an-equivalence-because P-is-modal (η x))
+    commutes : (ψ ⁻¹→) ∘ (λ s x → s (η x)) ∘ (φ ≃→) ⇒ (λ s x → s (η x))
+    commutes s = ap (ψ ⁻¹→) refl • (ψ ≃η) (λ x → s (η x))
   in equivalences-are-preserved-by-homotopy
      (λ s → (ψ ⁻¹→) (λ x → ((_≃_.e φ) s) (η x)))
      (λ (s : (x : ○ _) → P x) → λ x → s (η x))
-     (_≃_.proof (ψ ⁻¹≃ ∘≃ old-unique-elimination ∘≃ φ))
-     (λ s → fun-ext (λ a → {!!}))
--}
+     (_≃_.proof (ψ ⁻¹≃ ∘≃ old-elimination ∘≃ φ))
+     commutes
 
+
+{- we repeat our definitions for recursion rules.
+   this time, for maps into a modal 'B'. -}
 module recursion {i} {A B : U i} (p : B is-modal) (f : A → B) where 
-  open _is-an-equivalence (unique-elimination (λ (x : ○ A) → B))
+  open _is-an-equivalence (unique-elimination (λ (x : ○ A) → B) (λ x → p))
     renaming (η to left-invertibility; ε to right-invertibility)
 
   open _is-an-equivalence (○-ed-types-are-modal {A = B})
     hiding (η ; ε) renaming (inverse to η-B⁻¹)
-{-
+
   ○-recursion : (○ A → B)
-  ○-recursion = η-B⁻¹ ∘ (inverse f)
+  ○-recursion = inverse f
 
   ○-compute : 
     (x : A) → ○-recursion (η x) ≈ f(x)
   ○-compute x = ap (λ g → g x) (right-invertibility f) 
 
-  ○-uniqueness : (g : ○ A → ○ B)
+  ○-uniqueness : (g : ○ A → B)
     → g ∘ η ⇒ f → g ⇒ ○-recursion
   ○-uniqueness g ζ x =
       g(x)
@@ -147,5 +156,33 @@ module recursion {i} {A B : U i} (p : B is-modal) (f : A → B) where
     ≈⟨ refl ⟩
       ○-recursion x
     ≈∎
+
+
+{-
+
+  the next goals are various closure and preservation properties of 
+  modalities:
+
+  modal types are closed under 
+  * identity types
+  * Π of dependent types P : A → U-○
+  * Σ of dependent types P : ○ A → U-○
+  * pullbacks of modal cospans
+
+  ○ preserves
+  * 2-cells (○⇒)
+  * equivalences (○≃)
+  * products
+  * or more general: ○ Σ (λ (x : A) → B(ηx)) ≃ Σ (λ (y : ○A) → ○B(y))
+
 -}
 
+{-
+○⇒ : ∀ {i} {A B : U i} {f g : A → B}
+  → f ⇒ g → ○→ f ⇒ ○→ g
+○⇒ {f = f} {g = g} ζ x =
+  let
+    open recursion'
+  in {!○-compute (η ∘ f) !}
+-}
+{- ... -}
