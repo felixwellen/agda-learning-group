@@ -20,7 +20,7 @@ refl • γ = γ
 infixl 50 _•⇒_ 
 _•⇒_ : ∀ {i j} {A : U i} {B : U j} {f g h : A → B} 
       → f ⇒ g → g ⇒ h → f ⇒ h
-H-fg •⇒ H-gh = λ x → H-fg x • H-gh x
+η •⇒ ε = λ x → η x • ε x
 
 infix 60 _⁻¹       -- \^-\^1\bu
 _⁻¹ : ∀ {i} {A : U i} {x y : A} → x ≈ y → y ≈ x
