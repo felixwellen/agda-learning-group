@@ -56,33 +56,7 @@ postulate
     ∀ {i j} {A : U i} {B : U j} (f : A → B)
     → (f⁻¹ : B → A) → (f⁻¹ ∘ f ⇒ id) → (f ∘ f⁻¹ ⇒ id) 
     → f is-an-equivalence
-{-
-private 
-  naturality-for-invertibility-witnesses :
-    ∀ {A B : U₀} (f : A → B) (f⁻¹ : B → A)
-    → (η : f⁻¹ ∘ f ⇒ id) 
-    → (x : A) → η (f⁻¹ (f x)) ≈ ap (f⁻¹ ∘ f) (η x) 
-  naturality-for-invertibility-witnesses f f⁻¹ η x =
-      η (f⁻¹ (f x))
-    ≈⟨ refl-is-right-neutral _ ⟩
-       η ((f⁻¹ ∘ f) x) • refl
-    ≈⟨  ap (λ ζ → η ((f⁻¹ ∘ f) x) • ζ) (⁻¹-is-right-inversion (η x)) ⁻¹  ⟩
-       η ((f⁻¹ ∘ f) x) • ((η x) • η x ⁻¹)
-    ≈⟨ •-is-associative (η ((f⁻¹ ∘ f) x)) _ _  ⟩
-      η ((f⁻¹ ∘ f) x) • η x • η x ⁻¹
-    ≈⟨ ap (λ ζ → η ((f⁻¹ ∘ f) x) • ζ • η x ⁻¹) (id-has-trivial-application _ ⁻¹) ⟩
-      η ((f⁻¹ ∘ f) x) • ap id (η x) • η x ⁻¹
-    ≈⟨  ap (λ ζ → ζ • η x ⁻¹) (naturality-of-homotopies (f⁻¹ ∘ f) id η (η x))  ⟩
-      ap (f⁻¹ ∘ f) (η x) • η x • η x ⁻¹
-    ≈⟨  •-is-associative (ap (f⁻¹ ∘ f) (η x)) _ _ ⁻¹ ⟩
-      ap (f⁻¹ ∘ f) (η x) • (η x • η x ⁻¹)
-    ≈⟨ ap (λ ζ → ap (f⁻¹ ∘ f) (η x) • ζ) (⁻¹-is-right-inversion (η x)) ⟩
-      ap (f⁻¹ ∘ f) (η x) • refl 
-    ≈⟨ refl-is-right-neutral (ap (f⁻¹ ∘ f) (η x)) ⁻¹ ⟩
-      ap (f⁻¹ ∘ f) (η x) 
-    ≈∎
--}
-
+  
 
 id-as-equivalence : ∀ {i} {A : U i} → A ≃ A
 id-as-equivalence = id is-an-equivalence-because (create-equivalence-proof id id (λ _ → refl) (λ _ → refl))
@@ -109,3 +83,32 @@ equivalences-are-preserved-by-homotopy :
   → g is-an-equivalence
 equivalences-are-preserved-by-homotopy f g record { inverse = inverse ; η = η ; ε = ε ; half-adjoint = half-adjoint } ζ =
   create-equivalence-proof g inverse (λ x → ap inverse (ζ x) ⁻¹ • η x) (λ y → ζ (inverse y) ⁻¹ • ε y)
+
+
+    
+{-
+private 
+  naturality-for-invertibility-witnesses :
+    ∀ {A B : U₀} (f : A → B) (f⁻¹ : B → A)
+    → (η : f⁻¹ ∘ f ⇒ id) 
+    → (x : A) → η (f⁻¹ (f x)) ≈ ap (f⁻¹ ∘ f) (η x) 
+  naturality-for-invertibility-witnesses f f⁻¹ η x =
+      η (f⁻¹ (f x))
+    ≈⟨ refl-is-right-neutral _ ⟩
+       η ((f⁻¹ ∘ f) x) • refl
+    ≈⟨  ap (λ ζ → η ((f⁻¹ ∘ f) x) • ζ) (⁻¹-is-right-inversion (η x)) ⁻¹  ⟩
+       η ((f⁻¹ ∘ f) x) • ((η x) • η x ⁻¹)
+    ≈⟨ •-is-associative (η ((f⁻¹ ∘ f) x)) _ _  ⟩
+      η ((f⁻¹ ∘ f) x) • η x • η x ⁻¹
+    ≈⟨ ap (λ ζ → η ((f⁻¹ ∘ f) x) • ζ • η x ⁻¹) (id-has-trivial-application _ ⁻¹) ⟩
+      η ((f⁻¹ ∘ f) x) • ap id (η x) • η x ⁻¹
+    ≈⟨  ap (λ ζ → ζ • η x ⁻¹) (naturality-of-homotopies (f⁻¹ ∘ f) id η (η x))  ⟩
+      ap (f⁻¹ ∘ f) (η x) • η x • η x ⁻¹
+    ≈⟨  •-is-associative (ap (f⁻¹ ∘ f) (η x)) _ _ ⁻¹ ⟩
+      ap (f⁻¹ ∘ f) (η x) • (η x • η x ⁻¹)
+    ≈⟨ ap (λ ζ → ap (f⁻¹ ∘ f) (η x) • ζ) (⁻¹-is-right-inversion (η x)) ⟩
+      ap (f⁻¹ ∘ f) (η x) • refl 
+    ≈⟨ refl-is-right-neutral (ap (f⁻¹ ∘ f) (η x)) ⁻¹ ⟩
+      ap (f⁻¹ ∘ f) (η x) 
+    ≈∎
+-}
