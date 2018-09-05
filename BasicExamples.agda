@@ -206,6 +206,45 @@ p1 A P (a , p) = a
 -}
 
 
+{-
+  equality is also defined using 'data'
+  we use '\approx' as our symbol for equality
+  it is also accessible via '\eq' (go through the options with using arrow keys)
+-}
+
+data _≈_ {A : Set} (x : A) : A → Set where
+  refl : x ≈ x
+
+{- 
+  we could also arrange the parameters like this:
+
+  data _≈_ {A : Set} (x : A) (y : A) : Set where
+
+  but what we did is known to work well...
+-}
+
+{-
+  here is one basic example:
+-}
+
+ap : {A B : Set} {x y : A} (f : A → B) → (x ≈ y) → (f(x) ≈ f(y))
+ap f refl = refl
+
+{-
+  try to define:
+  * concatenation of equalities (transitivity)
+  * inversion/symmetry
+  * associativity
+  * ...
+  if you are stuck, look at 'Equality.agda' in the git-repo of the learning group
+
+  Then try to show: 
+  * 'zero' (in ℕ) is right-neutral
+  * reversing a list preserves its length
+  * reversing a list twice, is the list you started with
+-}
+
+
 {- solutions: -}
 
 curry : {A : Set} {B : Set} {C : Set}
