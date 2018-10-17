@@ -23,6 +23,9 @@
  Make a test.agda file in Aquamacs and write copy paste this file into it
  and try to 'load' it with CTRL-c CTRL-l.
  If everything works like it should, the text should become colored.
+ (Here is a list of some commands in the emacs mode:
+ https://agda.readthedocs.io/en/v2.5.2/tools/emacs-mode.html
+ - but most of them just start to make sense later.)
 -}
 
 -- one line comments start with '--'
@@ -138,6 +141,13 @@ zero    + l = l
 data _x_ (A : Set) (B : Set) : Set where
   _,_ : A -> B -> A x B
 
+{- projections -}
+x-p1 : {A B : Set} → A x B → A
+x-p1 (a , b) = a
+
+x-p2 : {A B : Set} → A x B → B
+x-p2 (a , b) = b
+
 {-
   write a function 'reverse' which reverses a list.
 -}
@@ -240,13 +250,115 @@ ap f refl = refl
 
   Then try to show: 
   * 'zero' (in ℕ) is right-neutral
-  * reversing a list preserves its length
-  * reversing a list twice, is the list you started with
+  * reversing a list preserves its length (this is some work...)
+  * reversing a list twice, is the list you started with (this is some work...)
 -}
 
 
-{- solutions: -}
+{- 
+
+solutions: 
+
+  |
+  v
+
+
+
+-}
+
+
+
+length : list nat → nat
+length empty = zero
+length (cons x l) = suc (length l) 
+
+reverse' : list nat → list nat → (list nat) x (list nat)
+reverse' empty  l2 = empty , l2
+reverse' (cons y l1)  l2 = reverse' l1 (cons y l2)
+
+reverse : list nat → list nat
+reverse l = x-p2 (reverse' l empty)
 
 curry : {A : Set} {B : Set} {C : Set}
       -> ((A x B) -> C) -> (A -> B -> C)
 curry f a b = f (a , b)
+
+concatenate : {A : Set} {x y z : A}
+  → x ≈ y → y ≈ z → x ≈ z
+concatenate refl refl = refl
+
+commute-one :
+  (n m : nat)
+  → (suc (n + m)) ≈ (n + (suc m))
+commute-one zero m = refl
+commute-one (suc n) m = ap suc (commute-one n m)
+
+lemma-length-suc : (l k : list nat) (n : nat)
+  → suc (length (x-p2 (reverse' l k))) ≈ length (x-p2 (reverse' l (cons n k)))
+lemma-length-suc empty k n = refl
+lemma-length-suc (cons x l) k n = {!!}
+
+lemma-length-reverse : (l k : list nat)
+  → ((length l) + (length k))
+    ≈ length (x-p2 (reverse' l k))
+lemma-length-reverse empty l = refl
+lemma-length-reverse (cons y l') k =
+  concatenate (ap suc (lemma-length-reverse l' k)) {!!}
+
+
+reverse-preserves-length :
+  (l : list nat)
+  → length l ≈ length (reverse l)
+reverse-preserves-length empty = refl
+reverse-preserves-length (cons x l) = {!!}
+
+{-
+      length : list A → ℕ
+    length [] = zero
+    length (x ∷ l) = (length l) +1
+
+    length-is-homomorphic :
+      ∀ (l k : list A)
+      → length (l ++ k) ≈ (length l) + (length k)
+    length-is-homomorphic [] k = refl
+    length-is-homomorphic (x ∷ l) k =
+        length ((x ∷ l) ++ k)
+      ≈⟨ (λ z → z +1) ⁎ (length-is-homomorphic l k) ⟩
+       (length l + length k) +1
+      ≈⟨ commute-1 (length l) _ ⟩
+        (length l +1) + length k
+      ≈⟨ refl ⟩
+        length (x ∷ l) + length k
+      ≈∎
+
+    private
+      reverse' : list A → list A → (list A × list A)
+      reverse' []  k = ([] , k)
+      reverse' (x ∷ l) k = reverse' l (x ∷ k)
+
+      length-invariance :
+        ∀ (l k : list A)
+        → length l + length k ≈ length (π₂ (reverse' l k))
+      length-invariance [] k = refl
+      length-invariance (x ∷ l) k = length-invariance l (x ∷ k)
+
+
+    reverse : list A → list A
+    reverse l = π₂ (reverse' l [])
+
+    length-invariance-of-reverse :
+      ∀ (l : list A)
+      → length l ≈ length (reverse l)
+    length-invariance-of-reverse l =
+                                 length l
+                               ≈⟨ zero-is-right-neutral _ ⁻¹ ⟩
+                                 length l + length []
+                               ≈⟨ length-invariance l [] ⟩
+                                 length (π₂ (reverse' l []))
+                               ≈⟨ refl ⟩
+                                 length (reverse l)
+                               ≈∎
+
+
+
+-}
